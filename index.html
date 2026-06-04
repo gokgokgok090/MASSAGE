@@ -1,0 +1,301 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Premium Messenger - Slim Header Dark Edition</title>
+    <style>
+        :root {
+            --primary-color: #0084ff;
+            --primary-glow: rgba(0, 132, 255, 0.3);
+            /* Premium Dark Mode Variables */
+            --bg-gradient: linear-gradient(135deg, #0f172a 0%, #1e1b4b 100%);
+            --glass-bg: #1e293b;
+            --header-bg: #1e293b;
+            --chat-bg: #0f172a;
+            --incoming-bubble: #334155;
+            --text-main: #f8fafc;
+            --text-muted: #94a3b8;
+            --border-color: #334155;
+            --input-bg: #1e293b;
+        }
+
+        * { box-sizing: border-box; font-family: 'Segoe UI', Roboto, sans-serif; }
+        
+        body { 
+            margin: 0; background: var(--bg-gradient); 
+            height: 100vh; display: flex; justify-content: center; align-items: center;
+            color: var(--text-main); overflow: hidden;
+            -webkit-user-select: none;
+            user-select: none;
+        }
+
+        /* Full Screen Container - No Round Shapes, No Borders */
+        .chat-container {
+            width: 100vw; height: 100vh;
+            background: var(--chat-bg);
+            display: flex; flex-direction: column; overflow: hidden;
+            position: relative;
+        }
+
+        /* Header - Extremely Slim and Compact */
+        header {
+            background: var(--header-bg); padding: 8px 15px; text-align: center;
+            font-size: 15px; font-weight: 600; color: var(--text-main);
+            border-bottom: 1px solid var(--border-color); display: flex; justify-content: center; align-items: center; gap: 8px;
+        }
+
+        /* Login Screen Overlay - Full Screen */
+        #login-screen {
+            position: absolute; width: 100%; height: 100%;
+            background: #1e293b; z-index: 100; display: none;
+            flex-direction: column; align-items: center; justify-content: center; padding: 40px;
+        }
+        .login-box { max-width: 400px; width: 100%; }
+        .login-box input {
+            width: 100%; padding: 15px; border: 2px solid var(--border-color);
+            background: var(--chat-bg); color: var(--text-main);
+            border-radius: 12px; margin-bottom: 20px; outline: none; font-size: 16px;
+            transition: border-color 0.3s;
+        }
+        .login-box input:focus { border-color: var(--primary-color); }
+        .login-box button {
+            width: 100%; background: var(--primary-color); color: white;
+            border: none; padding: 15px; border-radius: 12px; font-weight: bold; cursor: pointer;
+            box-shadow: 0 4px 15px var(--primary-glow);
+        }
+
+        /* Messages Area */
+        #messages {
+            flex: 1; overflow-y: auto; padding: 20px;
+            display: flex; flex-direction: column; gap: 14px;
+            background: var(--chat-bg);
+        }
+
+        .message { max-width: 75%; display: flex; flex-direction: column; animation: fadeIn 0.25s ease-out; position: relative; }
+        .message.incoming { align-self: flex-start; }
+        .message.outgoing { align-self: flex-end; align-items: flex-end; }
+
+        .sender-name { font-size: 11px; color: var(--text-muted); margin: 0 5px 4px 5px; }
+
+        .bubble {
+            padding: 12px 16px; border-radius: 18px; font-size: 15px;
+            line-height: 1.4; position: relative; box-shadow: 0 2px 4px rgba(0,0,0,0.1);
+            word-wrap: break-word; cursor: pointer;
+            transition: transform 0.1s;
+        }
+        .bubble:active { transform: scale(0.98); }
+        .incoming .bubble { background: var(--incoming-bubble); color: var(--text-main); border-bottom-left-radius: 4px; }
+        .outgoing .bubble { background: var(--primary-color); color: white; border-bottom-right-radius: 4px; }
+
+        /* Seen List Details Style */
+        .seen-by {
+            font-size: 10px; color: #10b981; margin-top: 4px; padding: 2px 6px;
+            background: rgba(16, 185, 129, 0.1); border-radius: 4px;
+            display: none; animation: fadeIn 0.2s ease; max-width: 100%;
+        }
+
+        /* Input Area - Full Width Bottom */
+        .input-area {
+            background: var(--header-bg); padding: 20px; display: flex; gap: 12px;
+            align-items: center; border-top: 1px solid var(--border-color);
+        }
+        #msgInput {
+            flex: 1; padding: 14px 20px; border-radius: 25px;
+            border: 1px solid var(--border-color); outline: none; 
+            background: var(--input-bg); color: var(--text-main); font-size: 15px;
+        }
+        #msgInput:focus { border-color: var(--primary-color); }
+        #msgInput::placeholder { color: var(--text-muted); }
+        
+        #sendBtn {
+            background: var(--primary-color); color: white; border: none;
+            width: 45px; height: 45px; border-radius: 50%; cursor: pointer;
+            display: flex; align-items: center; justify-content: center;
+            box-shadow: 0 4px 12px var(--primary-glow);
+            font-size: 16px;
+        }
+
+        /* Custom Scrollbar */
+        #messages::-webkit-scrollbar { width: 5px; }
+        #messages::-webkit-scrollbar-track { background: transparent; }
+        #messages::-webkit-scrollbar-thumb { background: var(--border-color); border-radius: 10px; }
+
+        @keyframes fadeIn { from { opacity: 0; transform: translateY(5px); } to { opacity: 1; transform: translateY(0); } }
+    </style>
+</head>
+<body>
+
+<div class="chat-container">
+    <div id="login-screen">
+        <div class="login-box">
+            <h2 style="color: var(--text-main); font-weight: 600; margin-bottom: 5px; text-align: center;">Welcome! Enter Your Name 😊</h2>
+            <p style="color: var(--text-muted); margin-bottom: 30px; text-align: center;">to continue chat</p>
+            <input type="text" id="joinName" placeholder="Enter Your Name...">
+            <button onclick="saveNameAndJoin()">Start Chatting</button>
+        </div>
+    </div>
+
+    <header id="chatHeader"> </header>
+    
+    <div id="messages"></div>
+
+    <div class="input-area">
+        <input type="text" id="msgInput" placeholder="Write a message..." autocomplete="off">
+        <button id="sendBtn" onclick="sendMessage()">➤⚡</button>
+    </div>
+</div>
+
+<script type="module">
+    import { initializeApp } from "https://www.gstatic.com/firebasejs/10.0.0/firebase-app.js";
+    import { getDatabase, ref, push, update, onValue, serverTimestamp } from "https://www.gstatic.com/firebasejs/10.0.0/firebase-database.js";
+
+    const firebaseConfig = {
+        apiKey: "AIzaSyCxE0Cg5pRaRzD74EG4ht21F3G3IpmN-as",
+        authDomain: "messenger-7b007.firebaseapp.com",
+        databaseURL: "https://messenger-7b007-default-rtdb.firebaseio.com",
+        projectId: "messenger-7b007",
+        storageBucket: "messenger-7b007.firebasestorage.app",
+        messagingSenderId: "834948359456",
+        appId: "1:834948359456:web:985843be4e7fcc53b76345"
+    };
+
+    const app = initializeApp(firebaseConfig);
+    const db = getDatabase(app);
+
+    let myName = localStorage.getItem("premium_chat_name");
+    let myId = localStorage.getItem("premium_chat_id");
+    window.currentFontStyle = 'small_caps'; // Default fallback
+
+    if (!myId) {
+        myId = 'id_' + Math.random().toString(36).substr(2, 9);
+        localStorage.setItem("premium_chat_id", myId);
+    }
+
+    window.onload = () => {
+        if (!myName) {
+            document.getElementById('login-screen').style.display = 'flex';
+        }
+    };
+
+    window.saveNameAndJoin = () => {
+        const nameVal = document.getElementById('joinName').value;
+        if (nameVal.trim()) {
+            localStorage.setItem("premium_chat_name", nameVal);
+            myName = nameVal;
+            document.getElementById('login-screen').style.display = 'none';
+            location.reload();
+        }
+    };
+
+    // Font transformer controller
+    function convertToSmallCaps(text) {
+        // If the admin switches to "Normal Font", skip processing completely
+        if (window.currentFontStyle === 'normal') return text;
+
+        const normalChars = "abcdefghijklmnopqrstuvwxyzABCDEFGHIJKLMNOPQRSTUVWXYZ";
+        const smallCapsChars = "ᴀʙᴄᴅᴇꜰɢʜɪᴊᴋʟᴍɴᴏᴘqʀꜱᴛᴜᴠᴡxʏᴢᴀʙᴄᴅᴇꜰɢʜɪᴊᴋʟᴍɴᴏᴘQʀꜱᴛᴜᴠᴡXʏᴢ";
+        return text.split('').map(char => {
+            const index = normalChars.indexOf(char);
+            return index !== -1 ? smallCapsChars[index] : char;
+        }).join('');
+    }
+
+    window.sendMessage = () => {
+        const input = document.getElementById('msgInput');
+        if (input.value.trim() && myName) {
+            push(ref(db, 'public_chat'), {
+                text: input.value,
+                name: myName,
+                uid: myId,
+                timestamp: serverTimestamp()
+            });
+            input.value = "";
+        }
+    };
+
+    document.getElementById('msgInput').addEventListener("keypress", (e) => { if (e.key === "Enter") sendMessage(); });
+
+    window.toggleSeenInfo = (msgId) => {
+        const infoDiv = document.getElementById(`seen-${msgId}`);
+        if(infoDiv) {
+            infoDiv.style.display = infoDiv.style.display === "block" ? "none" : "block";
+        }
+    }
+
+    // --- 1. LISTEN TO ADMIN PANEL CHANGER ---
+    onValue(ref(db, 'app_settings'), (snapshot) => {
+        if (snapshot.exists()) {
+            const settings = snapshot.val();
+            
+            // Sync live room title changes
+            if (settings.chat_title) {
+                document.getElementById('chatHeader').innerText = settings.chat_title;
+            }
+            
+            // Sync live text-font settings toggle
+            if (settings.font_style) {
+                window.currentFontStyle = settings.font_style;
+                // Force-trigger render refresh if chat list is already up
+                triggerChatRefresh();
+            }
+        }
+    });
+
+    // --- 2. RENDER MESSAGES CONTROLLER ---
+    let localChatSnapshot = null;
+    function renderMessages() {
+        if (!localChatSnapshot) return;
+        const msgDiv = document.getElementById('messages');
+        const currentScroll = msgDiv.scrollTop;
+        const wasAtBottom = msgDiv.scrollHeight - msgDiv.scrollTop <= msgDiv.clientHeight + 100;
+        
+        msgDiv.innerHTML = "";
+        
+        localChatSnapshot.forEach((child) => {
+            const data = child.val();
+            const msgId = child.key;
+            const isMe = data.uid === myId;
+            const stylizedText = convertToSmallCaps(data.text);
+
+            if (!isMe && myName && (!data.seen_users || !data.seen_users[myId])) {
+                update(ref(db, `public_chat/${msgId}/seen_users`), { [myId]: myName });
+            }
+
+            let seenNamesArray = [];
+            if (data.seen_users) {
+                Object.values(data.seen_users).forEach(name => {
+                    seenNamesArray.push(convertToSmallCaps(name));
+                });
+            }
+            let seenText = seenNamesArray.length > 0 ? `👁️ ꜱᴇᴇɴ ʙʏ: ${seenNamesArray.join(', ')}` : `👁️ ɴᴏ ᴏɴေ ꜱᴇᴇɴ ʏᴇᴛ`;
+
+            msgDiv.innerHTML += `
+                <div class="message ${isMe ? 'outgoing' : 'incoming'}">
+                    <span class="sender-name">${isMe ? 'You' : convertToSmallCaps(data.name)}</span>
+                    <div class="bubble" ondblclick="toggleSeenInfo('${msgId}')">
+                         ${stylizedText}
+                    </div>
+                    <div id="seen-${msgId}" class="seen-by">${seenText}</div>
+                </div>`;
+        });
+        
+        if (wasAtBottom) {
+            msgDiv.scrollTop = msgDiv.scrollHeight;
+        } else {
+            msgDiv.scrollTop = currentScroll;
+        }
+    }
+
+    function triggerChatRefresh() {
+        renderMessages();
+    }
+
+    onValue(ref(db, 'public_chat'), (snapshot) => {
+        localChatSnapshot = snapshot;
+        renderMessages();
+    });
+</script>
+
+</body>
+</html>
